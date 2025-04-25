@@ -126,18 +126,13 @@ h4 {
     color: #C6C6C6;
 }
 
-#network-status {
+.network-status {
+    
+    color: red;
+    font-size: 14px;
     display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: red;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    font-weight: bold;
-    z-index: 1000;
+    margin-top: 20px;
+    text-align: start;
 }
 
 @media screen and (min-width:1000px) and (max-width: 1234px) {
