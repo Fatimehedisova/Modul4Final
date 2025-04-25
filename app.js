@@ -14,7 +14,7 @@ let side1 = false;
 let side2 = false;
 const currency = {
     async exchange(amount, firstCurrency, secondCurrency) {
-        const url = `https://v6.exchangerate-api.com/v6/47eb3e300d61e356ae04b6f3/latest/${firstCurrency}`;
+        const url = `https://v6.exchangerate-api.com/v6/17b09ee6af67f6c6044afa9b/latest/${firstCurrency}`;
         const response = await fetch(url);
         const result = await response.json();
         return amount * result.conversion_rates[secondCurrency];
