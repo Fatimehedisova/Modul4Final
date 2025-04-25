@@ -12,19 +12,14 @@ let selectedLeftCurrency = 'RUB';
 let selectedRightCurrency = 'USD';
 let side1 = false;
 let side2 = false;
-class Currency {
-    constructor() {
-        this.url = "https://v6.exchangerate-api.com/v6/47eb3e300d61e356ae04b6f3/latest/";
-    }
-
+const currency = {
     async exchange(amount, firstCurrency, secondCurrency) {
-        const response = await fetch(`${this.url}${firstCurrency}`);
+        const url = `https://v6.exchangerate-api.com/v6/47eb3e300d61e356ae04b6f3/latest/${firstCurrency}`;
+        const response = await fetch(url);
         const result = await response.json();
         return amount * result.conversion_rates[secondCurrency];
     }
-}
-
-const currency = new Currency();
+};
 btnsRight.forEach(btn => {
     btn.addEventListener('click', (e) => {
         btnsRight.forEach(b => {
@@ -35,7 +30,7 @@ btnsRight.forEach(btn => {
         e.target.style.backgroundColor = '#833AE0';
         e.target.style.color = '#fff'
         selectedRightCurrency = e.target.textContent.trim();
-        
+
         if (side1 && input1.value.trim() !== '') {
             exchange();
         } else if (input2.value.trim() !== '') {
@@ -45,7 +40,7 @@ btnsRight.forEach(btn => {
         else {
             updateRates();
         }
-        
+
 
     })
 });
@@ -60,7 +55,7 @@ btnsLeft.forEach(btn => {
         e.target.style.backgroundColor = '#833AE0';
         e.target.style.color = '#fff';
         selectedLeftCurrency = e.target.textContent.trim();
-        
+
 
         if (side2 && input2.value.trim() !== '') {
             exchanged();
@@ -71,7 +66,7 @@ btnsLeft.forEach(btn => {
         else {
             updateRates();
         }
-       
+
 
     })
 });
@@ -113,7 +108,7 @@ function exchange() {
     if (value === '') {
         input2.value = '';
         return;
-    } 
+    }
     let amount1 = Number(value);
     if (isNaN(amount1)) return;
     if (selectedLeftCurrency === selectedRightCurrency) {
@@ -126,35 +121,51 @@ function exchange() {
 
 
 }
-function ratesLeft(amount1){
+function ratesLeft(amount1) {
+    if (selectedLeftCurrency === selectedRightCurrency) {
+        input2.value = amount1;
+        rateLeft.textContent = `1 ${selectedLeftCurrency} = 1 ${selectedRightCurrency}`;
+        rateRight.textContent = `1 ${selectedRightCurrency} = 1 ${selectedLeftCurrency}`;
+        return;
+    }
     currency.exchange(amount1, selectedLeftCurrency, selectedRightCurrency)
-    .then(result => {
-        input2.value = result.toFixed(5);
-    });
-currency.exchange(1, selectedLeftCurrency, selectedRightCurrency)
-    .then(rate => {
-        rateLeft.textContent = `1 ${selectedLeftCurrency} = ${rate.toFixed(5)} ${selectedRightCurrency}`;
-        rateRight.textContent = `1 ${selectedRightCurrency} = ${(1 / rate).toFixed(5)} ${selectedLeftCurrency}`;
-    });
-}
-function ratesRight(amount2){
-    currency.exchange(amount2, selectedRightCurrency, selectedLeftCurrency)
-    .then(result => {
-        input1.value = result.toFixed(5);
-    })
-currency.exchange(1, selectedRightCurrency, selectedLeftCurrency)
-    .then(rate => {
-        rateRight.textContent = `1 ${selectedRightCurrency} = ${rate.toFixed(5)} ${selectedLeftCurrency}`;
-        rateLeft.textContent = `1 ${selectedLeftCurrency} = ${(1 / rate).toFixed(5)} ${selectedRightCurrency}`;
-    })
-}
-function updateRates(){
-    
+        .then(result => {
+            input2.value = result.toFixed(5);
+        });
     currency.exchange(1, selectedLeftCurrency, selectedRightCurrency)
-    .then(rate => {
-        rateLeft.textContent = `1 ${selectedLeftCurrency} = ${rate.toFixed(5)} ${selectedRightCurrency}`;
-        rateRight.textContent = `1 ${selectedRightCurrency} = ${(1 / rate).toFixed(5)} ${selectedLeftCurrency}`;
-    });
+        .then(rate => {
+            rateLeft.textContent = `1 ${selectedLeftCurrency} = ${rate.toFixed(5)} ${selectedRightCurrency}`;
+            rateRight.textContent = `1 ${selectedRightCurrency} = ${(1 / rate).toFixed(5)} ${selectedLeftCurrency}`;
+        });
+}
+function ratesRight(amount2) {
+    if (selectedLeftCurrency === selectedRightCurrency) {
+        input1.value = amount2;
+        rateRight.textContent = `1 ${selectedRightCurrency} = 1 ${selectedLeftCurrency}`;
+        rateLeft.textContent = `1 ${selectedLeftCurrency} = 1 ${selectedRightCurrency}`;
+        return;
+    }
+    currency.exchange(amount2, selectedRightCurrency, selectedLeftCurrency)
+        .then(result => {
+            input1.value = result.toFixed(5);
+        })
+    currency.exchange(1, selectedRightCurrency, selectedLeftCurrency)
+        .then(rate => {
+            rateRight.textContent = `1 ${selectedRightCurrency} = ${rate.toFixed(5)} ${selectedLeftCurrency}`;
+            rateLeft.textContent = `1 ${selectedLeftCurrency} = ${(1 / rate).toFixed(5)} ${selectedRightCurrency}`;
+        })
+}
+function updateRates() {
+    if (selectedLeftCurrency === selectedRightCurrency) {
+        rateLeft.textContent = `1 ${selectedLeftCurrency} = 1 ${selectedRightCurrency}`;
+        rateRight.textContent = `1 ${selectedRightCurrency} = 1 ${selectedLeftCurrency}`;
+        return;
+    }
+    currency.exchange(1, selectedLeftCurrency, selectedRightCurrency)
+        .then(rate => {
+            rateLeft.textContent = `1 ${selectedLeftCurrency} = ${rate.toFixed(5)} ${selectedRightCurrency}`;
+            rateRight.textContent = `1 ${selectedRightCurrency} = ${(1 / rate).toFixed(5)} ${selectedLeftCurrency}`;
+        });
 }
 function exchanged() {
     let value = input2.value.trim();
@@ -163,7 +174,7 @@ function exchanged() {
         return;
     }
     let amount2 = Number(value);
-    
+
 
     if (isNaN(amount2)) return;
     if (selectedLeftCurrency === selectedRightCurrency) {
@@ -173,7 +184,7 @@ function exchanged() {
         return;
     }
     ratesRight(amount2);
-  
+
 
 }
 function checkNetworkStatus() {
