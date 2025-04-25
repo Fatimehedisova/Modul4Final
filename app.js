@@ -14,14 +14,16 @@ let side1 = false;
 let side2 = false;
 class Currency {
     constructor() {
-        this.url = "https://api.freecurrencyapi.com/v1/latest?apikey=fca_live_JOpyZFHN8XmnvLdoj7SwnVkEGhiszUPN5foRBbAl&base_currency=";
+        this.url = "https://v6.exchangerate-api.com/v6/47eb3e300d61e356ae04b6f3/latest/";
     }
+
     async exchange(amount, firstCurrency, secondCurrency) {
         const response = await fetch(`${this.url}${firstCurrency}`);
         const result = await response.json();
-        return amount * result.data[secondCurrency]
+        return amount * result.conversion_rates[secondCurrency];
     }
 }
+
 const currency = new Currency();
 btnsRight.forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -47,6 +49,7 @@ btnsRight.forEach(btn => {
 btnsLeft.forEach(btn => {
     btn.addEventListener('click', (e) => {
         btnsLeft.forEach(b => {
+
             b.style.backgroundColor = '';
             b.style.color = ''
 
@@ -143,3 +146,28 @@ function exchanged() {
         })
 
 }
+function checkNetworkStatus() {
+    const statusBar = document.getElementById("network-status");
+
+    function updateStatus() {
+        if (!navigator.onLine) {
+            statusBar.style.display = "block";
+        } else {
+            statusBar.style.display = "none";
+
+            
+            if (side1 && input1.value.trim() !== '') {
+                exchange();
+            } else if (side2 && input2.value.trim() !== '') {
+                exchanged();
+            }
+        }
+    }
+
+    window.addEventListener('online', updateStatus);
+    window.addEventListener('offline', updateStatus);
+
+    updateStatus(); 
+}
+
+checkNetworkStatus();
