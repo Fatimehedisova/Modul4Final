@@ -212,6 +212,5 @@ function checkNetworkStatus() {
 
 
 checkNetworkStatus();
-// ratesRight(1);
-// ratesLeft(1);
+
 updateRates();
