@@ -47,7 +47,6 @@ btnsRight.forEach(btn => {
 btnsLeft.forEach(btn => {
     btn.addEventListener('click', (e) => {
         btnsLeft.forEach(b => {
-
             b.style.backgroundColor = '';
             b.style.color = ''
 
