@@ -14,7 +14,7 @@ let side1 = false;
 let side2 = false;
 class Currency {
     constructor() {
-        this.url = "https://api.freecurrencyapi.com/v1/latest?apikey=fca_live_Nln7gxLTgFfzNS35H1lU3XlhnhS2t5UxkXnFMTfs&base_currency=";
+        this.url = "https://api.freecurrencyapi.com/v1/latest?apikey=fca_live_JOpyZFHN8XmnvLdoj7SwnVkEGhiszUPN5foRBbAl&base_currency=";
     }
     async exchange(amount, firstCurrency, secondCurrency) {
         const response = await fetch(`${this.url}${firstCurrency}`);
